@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Uploader</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Music Uploader</p>
+          <h1>Dateien umbenennen und Upload vorbereiten</h1>
+          <p class="lede">
+            Ordner waehlen, Titel generieren, SEO-Text anhaengen und die finale Struktur
+            vor dem DistroKid-Upload pruefen.
+          </p>
+        </div>
+
+        <button id="pick-folder-button" class="primary-button">Ordner auswaehlen</button>
+
+        <div class="panel">
+          <label for="genre-select">Musikrichtung / SEO-Profil</label>
+          <select id="genre-select"></select>
+          <p class="muted">
+            Profile steuern sowohl den SEO-Zusatz als auch die automatische Titelbildung.
+          </p>
+        </div>
+
+        <div class="panel">
+          <label for="seo-suffix">SEO-Zusatz</label>
+          <textarea
+            id="seo-suffix"
+            rows="6"
+            placeholder="SEO-Text fuer Dateinamen"
+          ></textarea>
+        </div>
+
+        <div class="panel">
+          <label for="folder-name">Ausgewaehlter Ordner</label>
+          <input id="folder-name" type="text" readonly />
+          <p id="folder-meta" class="muted">Noch kein Ordner geladen</p>
+        </div>
+
+        <div class="panel">
+          <label for="album-title">Albumtitel</label>
+          <input id="album-title" type="text" placeholder="Automatisch generierter Albumtitel" />
+          <p class="muted">Wird passend zum gewaehlten Profil erzeugt und kann manuell angepasst werden.</p>
+        </div>
+
+        <div class="button-row">
+          <button id="preview-button" class="secondary-button" disabled>Vorschau erzeugen</button>
+          <button id="apply-button" class="primary-button" disabled>Umbenennen</button>
+        </div>
+
+        <div class="button-row">
+          <button id="upload-preview-button" class="secondary-button" disabled>Upload pruefen</button>
+          <button id="manifest-button" class="primary-button" disabled>Manifest speichern</button>
+        </div>
+
+        <div class="panel panel-warning">
+          <p class="panel-title">DistroKid-Upload</p>
+          <p class="muted">
+            Feste Regeln: Instrumental fuer alle Tracks, Apple-Credits mit Björn Richter,
+            niemals Extras anklicken, Gesamtbetrag muss 0,00 EUR bleiben.
+          </p>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title">Empfohlener Ablauf</p>
+          <p class="muted">
+            1. Ordner laden. 2. Titel pruefen. 3. Dateien umbenennen. 4. Upload-Vorschau
+            erzeugen. 5. Manifest speichern.
+          </p>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Track Editor</p>
+              <h2>Titelvorschlaege</h2>
+            </div>
+            <p id="status-text" class="status-pill">Warte auf Ordnerauswahl</p>
+          </div>
+          <div id="tracks-container" class="tracks-empty">
+            Keine Dateien geladen.
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Rename Preview</p>
+              <h2>Finale Dateinamen</h2>
+            </div>
+          </div>
+          <div id="preview-container" class="preview-empty">
+            Noch keine Vorschau erzeugt.
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Upload Preview</p>
+              <h2>DistroKid-Zuordnung</h2>
+            </div>
+          </div>
+          <div id="upload-container" class="preview-empty">
+            Noch keine Upload-Vorschau erzeugt.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="track-row-template">
+      <div class="track-row">
+        <div class="track-meta">
+          <p class="track-original"></p>
+          <p class="track-path"></p>
+        </div>
+        <input class="track-title-input" type="text" />
+      </div>
+    </template>
+
+    <template id="preview-row-template">
+      <div class="preview-row">
+        <p class="preview-source"></p>
+        <p class="preview-arrow">→</p>
+        <p class="preview-target"></p>
+      </div>
+    </template>
+
+    <template id="upload-row-template">
+      <div class="upload-row">
+        <div>
+          <p class="preview-source"></p>
+          <p class="track-path upload-sub"></p>
+        </div>
+        <div>
+          <p class="preview-target"></p>
+          <p class="track-path upload-sub"></p>
+        </div>
+      </div>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

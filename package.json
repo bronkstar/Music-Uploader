@@ -1,0 +1,15 @@
+{
+  "name": "music-uploader",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local desktop app to rename WAV files and prepare DistroKid uploads.",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "distrokid:run": "node src/automation/distrokid-upload.js"
+  },
+  "dependencies": {
+    "electron": "^41.1.1",
+    "playwright": "^1.54.2"
+  }
+}

@@ -1,0 +1,263 @@
+:root {
+  --bg: #f2ede2;
+  --panel: rgba(255, 251, 245, 0.88);
+  --panel-strong: #fffaf0;
+  --ink: #1d1a17;
+  --muted: #675f56;
+  --line: rgba(29, 26, 23, 0.12);
+  --accent: #b14d1f;
+  --accent-strong: #8d3610;
+  --accent-soft: rgba(177, 77, 31, 0.12);
+  --success: #14532d;
+  --shadow: 0 20px 60px rgba(67, 44, 27, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 210, 150, 0.55), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(181, 214, 197, 0.45), transparent 25%),
+    linear-gradient(180deg, #f7f2e8 0%, #ece3d2 100%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.sidebar,
+.card {
+  background: var(--panel);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow);
+}
+
+.sidebar {
+  padding: 28px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-rows: 1.1fr 0.9fr 0.9fr;
+  gap: 24px;
+}
+
+.card {
+  border-radius: 28px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: 38px;
+}
+
+h2 {
+  font-size: 26px;
+}
+
+.lede,
+.muted {
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.panel-warning {
+  background: linear-gradient(180deg, rgba(177, 77, 31, 0.12), rgba(255, 250, 240, 0.95));
+}
+
+.panel-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea,
+.track-title-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 18px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+button:hover:enabled {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent) 0%, #d26f32 100%);
+  color: white;
+}
+
+.secondary-button {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.status-pill {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(20, 83, 45, 0.09);
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#tracks-container,
+#preview-container {
+  height: calc(100% - 76px);
+  overflow: auto;
+  padding-right: 8px;
+}
+
+.tracks-empty,
+.preview-empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 22px;
+  min-height: 220px;
+}
+
+.track-row,
+.preview-row {
+  display: grid;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.track-row {
+  grid-template-columns: minmax(300px, 1.4fr) 1fr;
+  align-items: center;
+}
+
+.preview-row {
+  grid-template-columns: 1fr 36px 1fr;
+  align-items: center;
+}
+
+.upload-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.track-original,
+.preview-source,
+.preview-target {
+  margin: 0;
+  font-weight: 700;
+}
+
+.track-path,
+.preview-arrow {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.upload-sub {
+  margin-top: 8px;
+}
+
+@media (max-width: 1080px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace {
+    grid-template-rows: auto auto;
+  }
+
+  .track-row,
+  .preview-row {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-arrow {
+    margin: 0;
+  }
+}
