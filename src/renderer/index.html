@@ -45,7 +45,12 @@
 
         <div class="panel">
           <label for="album-title">Albumtitel</label>
-          <input id="album-title" type="text" placeholder="Automatisch generierter Albumtitel" />
+          <div class="button-row">
+            <input id="album-title" type="text" placeholder="Automatisch generierter Albumtitel" />
+            <button id="regenerate-album-title-button" class="secondary-button" type="button">
+              Neu
+            </button>
+          </div>
           <p id="album-title-meta" class="muted">
             Wird passend zum gewaehlten Profil erzeugt und kann manuell angepasst werden.
           </p>

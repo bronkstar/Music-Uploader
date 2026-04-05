@@ -25,6 +25,7 @@ describe("library-service titles", () => {
   it("uses curated album titles for profiles", () => {
     expect(buildAlbumTitle("neural-biohacking")).toBe("Clear Work");
     expect(buildAlbumTitle("lofi")).toBe("Dust on the Tape");
+    expect(buildAlbumTitle("tavern-dnd")).toBe("Candles in the Common Room");
   });
 
   it("still falls back to cleaned source names for unknown profiles", () => {

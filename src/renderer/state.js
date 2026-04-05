@@ -13,13 +13,14 @@
       files: [],
       hasAppliedRename: false,
       profiles: {},
-      limits: {
-        trackTitle: 80,
-        albumTitle: 90,
-      },
-      selectedProfile: "chill-hop",
-    };
-  }
+    limits: {
+      trackTitle: 80,
+      albumTitle: 90,
+    },
+    albumTitleCursor: 0,
+    selectedProfile: "chill-hop",
+  };
+}
 
   return {
     createInitialState,

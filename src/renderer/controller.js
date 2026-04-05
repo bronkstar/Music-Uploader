@@ -60,6 +60,32 @@
       });
     }
 
+    function getProfileAlbumTitles(profileKey) {
+      const profile = state.profiles[profileKey];
+      return Array.isArray(profile?.albumTitles) ? profile.albumTitles : [];
+    }
+
+    function applyAlbumTitle(title) {
+      dom.albumTitleInput.value = title || "";
+      dom.albumTitleInput.maxLength = state.limits.albumTitle;
+    }
+
+    function resetAlbumTitleCursor(profileKey, currentTitle) {
+      const albumTitles = getProfileAlbumTitles(profileKey);
+      const currentIndex = albumTitles.findIndex((title) => title === currentTitle);
+      state.albumTitleCursor = currentIndex >= 0 ? currentIndex : 0;
+    }
+
+    function regenerateAlbumTitle() {
+      const albumTitles = getProfileAlbumTitles(dom.genreSelect.value);
+      if (albumTitles.length === 0) {
+        return;
+      }
+
+      state.albumTitleCursor = (state.albumTitleCursor + 1) % albumTitles.length;
+      applyAlbumTitle(albumTitles[state.albumTitleCursor]);
+    }
+
     function setPostRenameAvailability(isReady) {
       dom.uploadPreviewButton.disabled = !isReady || state.files.length === 0;
       dom.manifestButton.disabled = !isReady || state.files.length === 0;
@@ -95,8 +121,8 @@
       dom.seoSuffixInput.value = state.profiles[state.selectedProfile]?.seoSuffix || "";
 
       dom.folderNameInput.value = result.folderPath;
-      dom.albumTitleInput.value = result.analysis.albumTitle || "";
-      dom.albumTitleInput.maxLength = state.limits.albumTitle;
+      applyAlbumTitle(result.analysis.albumTitle || "");
+      resetAlbumTitleCursor(state.selectedProfile, result.analysis.albumTitle || "");
 
       if (dom.albumTitleMeta) {
         dom.albumTitleMeta.textContent =
@@ -145,7 +171,8 @@
       });
 
       state.files = refreshed.analysis.files;
-      dom.albumTitleInput.value = refreshed.analysis.albumTitle || dom.albumTitleInput.value;
+      applyAlbumTitle(refreshed.analysis.albumTitle || dom.albumTitleInput.value);
+      resetAlbumTitleCursor(dom.genreSelect.value, dom.albumTitleInput.value);
       renderTracks(dom, state);
 
       setPostRenameAvailability(true);
@@ -209,7 +236,8 @@
       });
 
       state.files = refreshed.analysis.files;
-      dom.albumTitleInput.value = refreshed.analysis.albumTitle || "";
+      applyAlbumTitle(refreshed.analysis.albumTitle || "");
+      resetAlbumTitleCursor(dom.genreSelect.value, refreshed.analysis.albumTitle || "");
       state.hasAppliedRename = false;
       renderTracks(dom, state);
       renderPreview(dom, null);
@@ -243,6 +271,12 @@
       );
       dom.distrokidRunButton.addEventListener("click", () =>
         runUiAction(handleRunDistrokidUpload, "DistroKid-Automation fehlgeschlagen"),
+      );
+      dom.regenerateAlbumTitleButton.addEventListener("click", () =>
+        runUiAction(async () => {
+          regenerateAlbumTitle();
+          setStatus(dom, "Albumtitel neu generiert");
+        }, "Albumtitel-Neugenerierung fehlgeschlagen"),
       );
     }
 

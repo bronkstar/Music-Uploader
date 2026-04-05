@@ -11,6 +11,7 @@ function buildHtml({ includeAlbumTitleMeta = true } = {}) {
         <input id="folder-name" />
         <p id="folder-meta"></p>
         <input id="album-title" />
+        <button id="regenerate-album-title-button"></button>
         ${includeAlbumTitleMeta ? '<p id="album-title-meta"></p>' : ""}
         <p id="status-text"></p>
         <div id="tracks-container"></div>
@@ -154,6 +155,41 @@ describe("createApp", () => {
     expect(dom.window.document.getElementById("genre-select").value).toBe("neural-biohacking");
     expect(dom.window.document.getElementById("seo-suffix").value).toBe("Neural Suffix");
     expect(dom.window.document.querySelector(".track-title-input").value).toBe("Clear Work");
+  });
+
+  it("regenerates the album title from the current profile list", async () => {
+    const dom = new JSDOM(buildHtml());
+    const musicUploader = createMusicUploaderMock();
+    const logger = { error: vi.fn() };
+    musicUploader.listProfiles.mockResolvedValue({
+      profiles: {
+        "chill-hop": {
+          label: "Chill Hop",
+          seoSuffix: "Suffix",
+          albumTitles: ["After Hours Notebook", "Soft Focus Sessions", "Night Window Studies"],
+        },
+      },
+      limits: {
+        trackTitle: 80,
+        albumTitle: 90,
+      },
+    });
+
+    const app = createApp({
+      document: dom.window.document,
+      musicUploader,
+      logger,
+    });
+
+    await app.init();
+    app.state.selectedProfile = "chill-hop";
+    dom.window.document.getElementById("genre-select").value = "chill-hop";
+    dom.window.document.getElementById("album-title").value = "After Hours Notebook";
+    app.state.albumTitleCursor = 0;
+
+    dom.window.document.getElementById("regenerate-album-title-button").click();
+
+    expect(dom.window.document.getElementById("album-title").value).toBe("Soft Focus Sessions");
   });
 
   it("writes the failure into the status when folder loading crashes", async () => {
