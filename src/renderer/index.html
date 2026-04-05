@@ -46,7 +46,9 @@
         <div class="panel">
           <label for="album-title">Albumtitel</label>
           <input id="album-title" type="text" placeholder="Automatisch generierter Albumtitel" />
-          <p class="muted">Wird passend zum gewaehlten Profil erzeugt und kann manuell angepasst werden.</p>
+          <p id="album-title-meta" class="muted">
+            Wird passend zum gewaehlten Profil erzeugt und kann manuell angepasst werden.
+          </p>
         </div>
 
         <div class="button-row">
@@ -59,11 +61,20 @@
           <button id="manifest-button" class="primary-button" disabled>Manifest speichern</button>
         </div>
 
+        <div class="button-row">
+          <button id="distrokid-open-button" class="secondary-button" disabled>DistroKid in Chrome</button>
+          <button id="distrokid-run-button" class="primary-button" disabled>Upload ausfuellen</button>
+        </div>
+
         <div class="panel panel-warning">
           <p class="panel-title">DistroKid-Upload</p>
           <p class="muted">
             Feste Regeln: Instrumental fuer alle Tracks, Apple-Credits mit Björn Richter,
             niemals Extras anklicken, Gesamtbetrag muss 0,00 EUR bleiben.
+          </p>
+          <p class="muted">
+            Ablauf: Chrome aus der App starten, selbst einloggen und zum Upload navigieren, danach
+            hier auf "Upload ausfuellen" klicken.
           </p>
         </div>
 
@@ -147,6 +158,10 @@
       </div>
     </template>
 
+    <script src="./state.js"></script>
+    <script src="./dom.js"></script>
+    <script src="./render.js"></script>
+    <script src="./controller.js"></script>
     <script src="./app.js"></script>
   </body>
   </html>

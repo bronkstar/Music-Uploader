@@ -11,11 +11,20 @@ function normalizeBaseName(fileName) {
 }
 
 function sortBySequence(a, b) {
-  const aMatch = a.originalName.match(/\((\d+)\)\.wav$/i);
-  const bMatch = b.originalName.match(/\((\d+)\)\.wav$/i);
-  const aIndex = aMatch ? Number(aMatch[1]) : 0;
-  const bIndex = bMatch ? Number(bMatch[1]) : 0;
-  return aIndex - bIndex;
+  const aLeadingMatch = a.originalName.match(/^(\d+)\s+/);
+  const bLeadingMatch = b.originalName.match(/^(\d+)\s+/);
+
+  if (aLeadingMatch || bLeadingMatch) {
+    const aIndex = aLeadingMatch ? Number(aLeadingMatch[1]) : Number.POSITIVE_INFINITY;
+    const bIndex = bLeadingMatch ? Number(bLeadingMatch[1]) : Number.POSITIVE_INFINITY;
+    return aIndex - bIndex || a.originalName.localeCompare(b.originalName);
+  }
+
+  const aTrailingMatch = a.originalName.match(/\((\d+)\)\.wav$/i);
+  const bTrailingMatch = b.originalName.match(/\((\d+)\)\.wav$/i);
+  const aIndex = aTrailingMatch ? Number(aTrailingMatch[1]) : 0;
+  const bIndex = bTrailingMatch ? Number(bTrailingMatch[1]) : 0;
+  return aIndex - bIndex || a.originalName.localeCompare(b.originalName);
 }
 
 function titleCase(value) {
@@ -51,7 +60,15 @@ function sanitizeTitleSeed(value) {
 function buildProfileTitle(profileKey, index) {
   const profile = MUSIC_PROFILES[profileKey];
 
-  if (!profile || !profile.titleParts) {
+  if (!profile) {
+    return "";
+  }
+
+  if (Array.isArray(profile.titles) && profile.titles.length > 0) {
+    return clampText(profile.titles[index % profile.titles.length], MAX_TRACK_TITLE_LENGTH);
+  }
+
+  if (!profile.titleParts) {
     return "";
   }
 
@@ -66,7 +83,15 @@ function buildProfileTitle(profileKey, index) {
 function buildAlbumTitle(profileKey) {
   const profile = MUSIC_PROFILES[profileKey];
 
-  if (!profile || !profile.albumTitleParts) {
+  if (!profile) {
+    return "Untitled Album";
+  }
+
+  if (Array.isArray(profile.albumTitles) && profile.albumTitles.length > 0) {
+    return clampText(profile.albumTitles[0], MAX_ALBUM_TITLE_LENGTH);
+  }
+
+  if (!profile.albumTitleParts) {
     return "Untitled Album";
   }
 
@@ -133,6 +158,17 @@ function buildFinalName(title, _seoSuffix, index) {
   const trimmedTitle = clampText(title, MAX_TRACK_TITLE_LENGTH);
   const numbered = `${String(index + 1).padStart(2, "0")} ${trimmedTitle}`;
   return `${numbered}.wav`;
+}
+
+function buildDistrokidTitle(title, seoSuffix) {
+  const normalizedTitle = String(title || "").trim();
+  const normalizedSuffix = String(seoSuffix || "").trim();
+
+  if (!normalizedSuffix) {
+    return normalizedTitle;
+  }
+
+  return `${normalizedTitle} ${normalizedSuffix}`.trim();
 }
 
 function validatePlan(plan) {
@@ -214,6 +250,7 @@ function buildUploadManifest(payload) {
     tracks: renamePlan.items.map((item, index) => ({
       trackNumber: index + 1,
       title: files[index].generatedTitle,
+      distrokidTitle: buildDistrokidTitle(files[index].generatedTitle, seoSuffix),
       sourceFileName: item.originalName,
       uploadFileName: item.targetName,
       sourcePath: item.originalPath,
@@ -245,8 +282,12 @@ module.exports = {
   MUSIC_PROFILES,
   MAX_TRACK_TITLE_LENGTH,
   MAX_ALBUM_TITLE_LENGTH,
+  buildAlbumTitle,
   analyzeFolder,
+  buildDistrokidTitle,
   buildRenamePlan,
+  buildGeneratedTitle,
+  buildProfileTitle,
   applyRenamePlan,
   buildUploadManifest,
   writeUploadManifest,

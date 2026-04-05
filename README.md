@@ -31,6 +31,16 @@ npm install
 npm start
 ```
 
+## Tests
+
+```bash
+npm test
+npm run test:smoke
+npm run lint
+```
+
+`npm run test:smoke` startet die echte Electron-App in einem versteckten Fenster und prueft den initialen Renderer-Flow.
+
 ## DistroKid
 
 Stand 2026-04-04: Es wird aktuell von dieser App keine offizielle DistroKid-API verwendet. Der Upload wird deshalb als Browser-Automation vorbereitet.
@@ -68,3 +78,16 @@ Die App kann ein JSON-Manifest erzeugen, das die komplette Reihenfolge und die D
 ## Browser-Automation
 
 Die Playwright-Schicht ist als erster technischer Stand enthalten. Vor echtem Vollbetrieb muessen die finalen Selektoren gegen den Live-Upload-Flow validiert werden, weil DistroKid Form-Aufbau und Texte aendern kann.
+
+Der DistroKid-Runner startet Google Chrome sichtbar mit einem persistenten Profilordner unter `.codex-temp/distrokid-chrome-profile`. Damit kannst du dich im Browser manuell einloggen, zum Upload-Formular gehen und erst dann im Terminal mit `Enter` die Automation starten.
+
+```bash
+npm run distrokid:run -- "D:\pfad\zu\upload-manifest.json"
+```
+
+Optional kannst du einen eigenen Chrome-Profilordner setzen:
+
+```bash
+$env:MUSIC_UPLOADER_CHROME_PROFILE_DIR="D:\chrome-profiles\distrokid"
+npm run distrokid:run -- "D:\pfad\zu\upload-manifest.json"
+```

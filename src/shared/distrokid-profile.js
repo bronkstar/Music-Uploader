@@ -17,6 +17,10 @@ const DISTROKID_UPLOAD_PROFILE = {
       name: "Björn Richter",
     },
   ],
+  songwriter: {
+    firstName: "Björn",
+    lastName: "Richter",
+  },
 };
 
 module.exports = {

@@ -11,6 +11,12 @@ const {
   buildUploadManifest,
   writeUploadManifest,
 } = require("../shared/library-service");
+const {
+  closeActiveSession,
+  continueSession,
+  getSessionStatus,
+  startSession,
+} = require("../automation/distrokid-service");
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -18,6 +24,7 @@ function createWindow() {
     height: 960,
     minWidth: 1180,
     minHeight: 760,
+    show: process.env.MUSIC_UPLOADER_HEADLESS !== "1",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -49,7 +56,7 @@ app.whenReady().then(() => {
     };
   });
 
-  ipcMain.handle("folder:pick", async () => {
+  ipcMain.handle("folder:pick", async (_event, payload) => {
     const result = await dialog.showOpenDialog({
       properties: ["openDirectory"],
     });
@@ -59,7 +66,8 @@ app.whenReady().then(() => {
     }
 
     const folderPath = result.filePaths[0];
-    const analysis = await analyzeFolder(folderPath, "chill-hop");
+    const profileKey = typeof payload === "string" ? payload : payload?.profileKey || "chill-hop";
+    const analysis = await analyzeFolder(folderPath, profileKey);
     return {
       folderPath,
       analysis,
@@ -80,6 +88,23 @@ app.whenReady().then(() => {
 
   ipcMain.handle("library:write-upload-manifest", async (_event, payload) => {
     return writeUploadManifest(payload);
+  });
+
+  ipcMain.handle("distrokid:start-session", async (_event, payload) => {
+    const manifest = buildUploadManifest(payload);
+    const session = await startSession(manifest);
+    return {
+      ...session,
+      manifest,
+    };
+  });
+
+  ipcMain.handle("distrokid:continue-session", async () => {
+    return continueSession();
+  });
+
+  ipcMain.handle("distrokid:get-session-status", async () => {
+    return getSessionStatus();
   });
 
   ipcMain.handle("library:read-config", async () => {
@@ -112,4 +137,8 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("before-quit", async () => {
+  await closeActiveSession();
 });
